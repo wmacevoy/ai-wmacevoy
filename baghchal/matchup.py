@@ -22,6 +22,7 @@ class Matchup:
         else:
             move=self._tigerAgent.propose()
             self._game.play(move)
+        print(self._game)
 
     @property
     def game(self) -> Game:
