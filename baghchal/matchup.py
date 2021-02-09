@@ -7,22 +7,31 @@ from agent import Agent
 
 
 class Matchup:
-    def __init__(self):
+    def __init__(self, verbose : bool = True):
         self._game = Game()
         self._goatAgent : Agent = RandomAgent(self._game, Const.MARK_GOAT)
         self._tigerAgent : Agent = RandomAgent(self._game,Const.MARK_TIGER)
+        self._verbose = verbose
 
 
     def turn(self)  -> None:
         if self._game.over:
+            if self._verbose:
+                print("game over - " + Const.stateStr(game.state))
+                print(game)
             return
         if self._game.state == Const.STATE_TURN_GOAT:
             move=self._goatAgent.propose()
             self._game.play(move)
-        else:
+            if self._verbose:
+                print("after goat move " + str(move) + ":")
+                print(self._game)
+        if self._game.state == Const.STATE_TURN_TIGER:
             move=self._tigerAgent.propose()
             self._game.play(move)
-        print(self._game)
+            if self._verbose:
+                print("after tiger move " + str(move) + ":")
+                print(self._game)
 
     @property
     def game(self) -> Game:

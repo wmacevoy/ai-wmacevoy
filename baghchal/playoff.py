@@ -4,10 +4,11 @@ from matchup import Matchup
 from stats import Stats
 
 class Playoff:
-    def __init__(self, trials : int = 10):
+    def __init__(self, trials : int = 10, verbose: bool = False):
         self._goatAgents : Dict[str,Agent] = dict()
         self._tigerAgents : Dict[str,Agent] = dict()
         self._trials : int = trials
+        self._verbose = verbose
 
     def addGoatAgent(self,name : str,agent : Agent) -> None:
         self._goatAgents[name]=agent
@@ -20,7 +21,7 @@ class Playoff:
             for tigerAgentName in self._tigerAgents:
                 goatAgent : Agent = self._goatAgents[goatAgentName]
                 tigerAgent : Agent = self._tigerAgents[tigerAgentName]
-                matchup : Matchup = Matchup()
+                matchup : Matchup = Matchup(self._verbose)
                 matchup.tigerAgent = tigerAgent
                 matchup.goatAgent = goatAgent
                 stats : Stats = Stats(matchup,self._trials)
