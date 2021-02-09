@@ -117,6 +117,10 @@ class Game:
             self._state = Const.STATE_TURN_GOAT
         if self._turns - self._captureTurns[-1] > Const.MAX_MOVES_WITHOUT_CAPTURE:
             self._state = Const.STATE_DRAW
+        if self._state == Const.STATE_TURN_GOAT:
+            goatMoves : List[Move] = self.goatMoves()
+            if len(goatMoves) == 0:
+                self._state = Const.STATE_DRAW
 
     def unplay(self, move : Move):
         self._turns = self._turns - 1
