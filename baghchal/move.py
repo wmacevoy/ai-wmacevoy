@@ -1,6 +1,9 @@
+from typing import Tuple
 from const import Const
 
 class Move:
+    @classmethod
+
 
     # use "to" == "from" for placement
     def __init__(self, mark : int, fromRow : int, fromCol : int, toRow : int, toCol : int):
@@ -47,11 +50,28 @@ class Move:
     def fromCol(self) -> int:
         return self._fromCol
     @property
+    def fromRowCol(self) -> Tuple[int,int]:
+        return (self._fromRow,self._fromCol)
+
+    @property
     def toRow(self) -> int:
         return self._toRow
     @property
     def toCol(self) -> int:
         return self._toCol
+    @property
+    def toRowCol(self) -> Tuple[int,int]:
+        return (self._toRow,self._toCol)
+    @property
+    def capRow(self) -> int:
+        return (self._fromRow+self._toRow)//2
+    @property
+    def capCol(self) -> int:
+        return (self._fromCol+self._toCol)//2
+    @property
+    def capRowCol(self) -> Tuple[int,int]:
+        return ((self._fromRow+self._toRow)//2,(self._fromCol+self._toCol)//2)
+
     @property
     def mark(self) -> int:
         return self._mark
