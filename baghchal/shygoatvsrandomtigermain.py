@@ -10,7 +10,7 @@ game = Game()
 playoff = Playoff(trials = 10, verbose = True)
 
 
-playoff.addGoatAgent("shy goat",ShyGoatAgent(game))
+playoff.addGoatAgent("shy goat",ShyGoatAgent(game,Const.MARK_GOAT))
 playoff.addTigerAgent("random tiger",RandomAgent(game,Const.MARK_TIGER))
 
 playoff.play()
