@@ -16,8 +16,7 @@ def ConstDirCache(rows : int, cols : int) -> Dict[Tuple[int,int],List[Tuple[int,
                 if (row < rows-1 and col > 0): dirs.append((1,-1))
             cache[(row,col)]=dirs
     return cache
-
-
+    
 class Const:
     ROWS : int = 5
     COLS : int = 5

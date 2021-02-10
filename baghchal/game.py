@@ -2,9 +2,63 @@ from typing import List, Tuple, Optional
 from const import Const
 from move import Move
 
+
+def _goatPlacements() -> Dict[Tuple[int,int],List[Move]]:
+    allMoves : Dict[Tuple[int,int],List[Move]] = {}
+    for row in range(Const.ROWS):
+        for col in range(Const.COLS):
+            atMoves : List[Move] = []
+            move = Move(Const.MARK_GOAT,row,col,row,col)
+            atMoves.append(move)
+            allMoves[(row,col)]=atMoves
+    return allMoves
+
+def _goatMovements() -> Dict[Tuple[int,int],List[Move]]:
+    allMoves : Dict[Tuple[int,int],List[Move]] = {}
+    for row in range(Const.ROWS):
+        for col in range(Const.COLS):
+            atMoves : List[Move] = []
+            for (dRow,dCol) in Const.DIRS[(row,col)]:
+                move = Move(Const.MARK_GOAT,row,col,row+dRow,col+dCol)
+                atMoves.append(move)
+            allMoves[(row,col)]=atMoves
+    return allMoves
+
+def _tigerMovements() -> Dict[Tuple[int,int],List[Move]]:
+    allMoves : Dict[Tuple[int,int],List[Move]] = {}
+    for row in range(Const.ROWS):
+        for col in range(Const.COLS):
+            atMoves : List[Move] = []
+            for (dRow,dCol) in Const.DIRS[(row,col)]:
+                move = Move(Const.MARK_TIGER,row,col,row+dRow,col+dCol)
+                atMoves.append(move)
+            allMoves[(row,col)]=atMoves
+    return allMoves
+
+def _tigerCaptures() -> Dict[Tuple[int,int],List[Move]]:
+    allMoves : Dict[Tuple[int,int],List[Move]] = {}
+    for row in range(Const.ROWS):
+        for col in range(Const.COLS):
+            atMoves : List[Move] = []
+            for (dRow,dCol) in Const.DIRS[(row,col)]:
+                toRow = row + 2*dRow
+                toCol = col + 2*dCol
+                if 0 <= toRow and toRow < Const.ROWS and 0 <= toCol and toCol < Const.COLS:
+                    move = Move(Const.MARK_TIGER,row,col,toRow,toCol)
+                    atMoves.append(move)
+            allMoves[(row,col)]=atMoves
+    return allMoves
+
 class Game:
     def __init__(self):
         self.reset()
+
+
+    GOAT_PLACEMENTS : Dict[Tuple[int,int],List[Move]] = _goatPlacements()
+    GOAT_MOVEMENTS : Dict[Tuple[int,int],List[Move]] = _goatMovements()
+    TIGER_MOVEMENTS : Dict[Tuple[int,int],List[Move]] = _tigerMovements()
+    TIGER_CAPTURES : Dict[Tuple[int,int],List[Move]] = _tigerCaptures()
+
 
     def reset(self):
         self._board : List[List[int]] = [[Const.MARK_NONE for col in range(Const.COLS)] for row in range(Const.ROWS)]
@@ -16,8 +70,8 @@ class Game:
         self._turns : int = 0
         self._captureTurns : List[int] = [0]
         self._placed : int = 0 # number of goats placed
-        self._captured : int = 0 # number of goats captured
-    
+        self._captured : int = 0 # number of goats captured    
+
     @property
     def over(self) -> bool:
         return \
@@ -58,6 +112,16 @@ class Game:
                 moves.append(move)
             except ValueError:
                 pass
+        return moves
+
+
+    def goatPlacements(self) -> List[Move]:
+        moves : List[Move] = []
+        for row in range(Const.ROWS):
+            for col in range(Const.COLS):
+                if self._board[row][col] == Const.MARK_NONE:
+                    placements = self.GOAT_PLACEMENTS[(row,col)]
+                    moves.extend(placements)
         return moves
 
     def goatMovements(self) -> List[Move]:

@@ -6,9 +6,10 @@ from move import Move
 import random
 
 class ShyGoatAgent(Agent):
-    def __init__(self,game : Game):
-        super(ShyGoatAgent, self).__init__(game,Const.MARK_GOAT)
-
+    def __init__(self,game : Game, side : int):
+        super(ShyGoatAgent, self).__init__(game,side)
+        if side != Const.MARK_GOAT:
+            raise ValueError("side must be goat")
     def isCloseToTiger(self,row : int, col : int):
         game : Game = self.game
         board : List[List[int]] = game.board

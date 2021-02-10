@@ -1,9 +1,8 @@
 from const import Const
 
 class Move:
-
-    # use "to" == "from" for placement
-    def __init__(self, mark : int, fromRow : int, fromCol : int, toRow : int, toCol : int):
+    @classmethod
+    def ok(cls, mark : int, fromRow : int, fromCol : int, toRow : int, toCol : int):
         if mark == Const.MARK_NONE:
             raise ValueError(f"mark must be goat or tiger")
         Const.markOk(mark)
@@ -11,11 +10,6 @@ class Move:
         Const.colOk(fromCol)
         Const.rowOk(toRow)
         Const.colOk(toCol)
-        self._mark : int = mark
-        self._fromRow : int = fromRow
-        self._fromCol : int = fromCol
-        self._toRow : int = toRow
-        self._toCol : int = toCol
         
         dist : int = max(abs(toRow-fromRow),abs(toCol-fromCol))
         diagonal : bool = \
@@ -32,14 +26,33 @@ class Move:
         elif dist < 1 or dist > 2:
             raise ValueError("tigers can only move 1 or 2 (capture)")
 
+    def __init__(self, mark : int, fromRow : int, fromCol : int, toRow : int, toCol : int):
+        self.ok(mark,fromRow,fromCol,toRow,toCol)
+        self._mark : int = mark
+        self._fromRow : int = fromRow
+        self._fromCol : int = fromCol
+        self._toRow : int = toRow
+        self._toCol : int = toCol
+
+    @property
+    def distance(self) -> int:
+        return max(abs(self._toRow-self._fromRow),abs(self._toCol-self._fromCol))
     @property
     def placement(self) -> bool:
-        return self._toRow == self._fromRow and self._toCol == self._fromCol
+        return self.distance == 0
 
     @property
     def capture(self) -> bool:
-        return max(abs(self._toRow-self._fromRow),abs(self._toCol-self._fromCol)) == 2
-    
+         return self.distance == 2
+
+    @property
+    def goat(self) -> bool:
+        return self._mark == Const.MARK_GOAT
+
+    @property
+    def tiger(self) -> bool:
+        return self._mark == Const.MARK_TIGER
+
     @property
     def fromRow(self) -> int:
         return self._fromRow
@@ -79,6 +92,3 @@ class Move:
             toCol=fromCol
         move = Move(mark,fromRow,fromCol,toRow,toCol)
         return move
-
-
-
