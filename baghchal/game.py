@@ -1,54 +1,6 @@
-from typing import Dict,Set,List, Tuple, Optional
+from typing import List, Tuple, Optional
 from const import Const
 from move import Move
-
-
-def _goatPlacements() -> Dict[Tuple[int,int],List[Move]]:
-    allMoves : Dict[Tuple[int,int],List[Move]] = {}
-    for row in range(Const.ROWS):
-        for col in range(Const.COLS):
-            atMoves : List[Move] = []
-            move = Move(Const.MARK_GOAT,row,col,row,col)
-            atMoves.append(move)
-            allMoves[(row,col)]=atMoves
-    return allMoves
-
-def _goatMovements() -> Dict[Tuple[int,int],List[Move]]:
-    allMoves : Dict[Tuple[int,int],List[Move]] = {}
-    for row in range(Const.ROWS):
-        for col in range(Const.COLS):
-            atMoves : List[Move] = []
-            for (dRow,dCol) in Const.DIRS[(row,col)]:
-                move = Move(Const.MARK_GOAT,row,col,row+dRow,col+dCol)
-                atMoves.append(move)
-            allMoves[(row,col)]=atMoves
-    return allMoves
-
-def _tigerMovements() -> Dict[Tuple[int,int],List[Move]]:
-    allMoves : Dict[Tuple[int,int],List[Move]] = {}
-    for row in range(Const.ROWS):
-        for col in range(Const.COLS):
-            atMoves : List[Move] = []
-            for (dRow,dCol) in Const.DIRS[(row,col)]:
-                move = Move(Const.MARK_TIGER,row,col,row+dRow,col+dCol)
-                atMoves.append(move)
-            allMoves[(row,col)]=atMoves
-    return allMoves
-
-def _tigerCaptures() -> Dict[Tuple[int,int],List[Move]]:
-    allMoves : Dict[Tuple[int,int],List[Move]] = {}
-    for row in range(Const.ROWS):
-        for col in range(Const.COLS):
-            atMoves : List[Move] = []
-            for (dRow,dCol) in Const.DIRS[(row,col)]:
-                toRow = row + 2*dRow
-                toCol = col + 2*dCol
-                if 0 <= toRow and toRow < Const.ROWS and 0 <= toCol and toCol < Const.COLS:
-                    move = Move(Const.MARK_TIGER,row,col,toRow,toCol)
-                    atMoves.append(move)
-            allMoves[(row,col)]=atMoves
-    return allMoves
-
 
 class Game:
     def __init__(self):
@@ -66,12 +18,6 @@ class Game:
         self._placed : int = 0 # number of goats placed
         self._captured : int = 0 # number of goats captured
     
-    
-    GOAT_PLACEMENTS : Dict[Tuple[int,int],List[Move]] = _goatPlacements()
-    GOAT_MOVEMENTS : Dict[Tuple[int,int],List[Move]] = _goatMovements()
-    TIGER_MOVEMENTS : Dict[Tuple[int,int],List[Move]] = _tigerMovements()
-    TIGER_CAPTURES : Dict[Tuple[int,int],List[Move]] = _tigerCaptures()
-
     @property
     def over(self) -> bool:
         return \
@@ -85,15 +31,27 @@ class Game:
         if not move.placement and self._board[move.fromRow][move.fromCol] != move.mark:
             raise ValueError("source (from) is not player")
         if move.capture:
-            if self._board[move.capRow][move.capCol] != Const.MARK_GOAT:
+            captureRow : int = (move.toRow + move.fromRow) // 2
+            captureCol : int = (move.toCol + move.fromCol) // 2
+            if self._board[captureRow][captureCol] != Const.MARK_GOAT:
                 raise ValueError("capture move without goat")
+            
+
+
+    def goatPlacements(self) -> List[Move]:
+        moves : List[Move] = []
+        for row in range(Const.ROWS):
+            for col in range(Const.COLS):
+                if self._board[row][col] == Const.MARK_NONE:
+                    moves.append(Move(Const.MARK_GOAT,row,col,row,col))
+        return moves
 
     def movements(self, fromRow : int, fromCol : int, dist : int = 1) -> List[Move]:
         mark : int = self._board[fromRow][fromCol]
         moves : List[Move] = []
-        for (dRow,dCol) in Const.DIRS[(fromRow,fromCol)]:
-            toRow : int = fromRow+dist*dRow
-            toCol : int = fromCol+dist*dCol
+        for dir in Const.DIRS[(fromRow,fromCol)]:
+            toRow : int = fromRow+dist*dir[0]
+            toCol : int = fromCol+dist*dir[1]
             try:
                 move=Move(mark,fromRow,fromCol,toRow,toCol)
                 self.moveOk(move)
@@ -102,61 +60,22 @@ class Game:
                 pass
         return moves
 
-
-    def goatPlacements(self) -> List[Move]:
-        moves : List[Move] = []
-        for row in range(Const.ROWS):
-            for col in range(Const.COLS):
-                if self._board[row][col] == Const.MARK_NONE:
-                    moves.extend(self.GOAT_PLACEMENTS[(row,col)])
-        return moves
-
     def goatMovements(self) -> List[Move]:
         moves : List[Move] = []
         for row in range(Const.ROWS):
             for col in range(Const.COLS):
                 if self._board[row][col] == Const.MARK_GOAT:
-                    for movement in self.GOAT_MOVEMENTS[(row,col)]:
-                        if self._board[movement.toRow][movement.toCol] == Const.MARK_NONE:
-                            moves.append(movement)
+                    moves.extend(self.movements(row,col))
         return moves
-
-    def anyGoatMoves(self) -> bool:
-        if self._placed < Const.GOAT_PLACEMENTS:
-            return True
-        for row in range(Const.ROWS):
-            for col in range(Const.COLS):
-                if self._board[row][col] == Const.MARK_GOAT:
-                    for movement in self.GOAT_MOVEMENTS[(row,col)]:
-                        if self._board[movement.toRow][movement.toCol] == Const.MARK_NONE:
-                            return True
-        return False
-            
-    def anyTigerMoves(self) -> bool:
-        for row in range(Const.ROWS):
-            for col in range(Const.COLS):
-                if self._board[row][col] == Const.MARK_TIGER:
-                    for movement in self.TIGER_MOVEMENTS[(row,col)]:
-                        if self._board[movement.toRow][movement.toCol] == Const.MARK_NONE:
-                            return True
-                    for capture in self.TIGER_CAPTURES[(row,col)]:
-                        if self._board[capture.toRow][capture.toCol] == Const.MARK_NONE:
-                            if self._board[capture.capRow][capture.capCol] == Const.MARK_GOAT:
-                                return True
-        return False
+        
 
     def tigerMoves(self) -> List[Move]:
         moves : List[Move] = []
         for row in range(Const.ROWS):
             for col in range(Const.COLS):
                 if self._board[row][col] == Const.MARK_TIGER:
-                    for movement in self.TIGER_MOVEMENTS[(row,col)]:
-                        if self._board[movement.toRow][movement.toCol] == Const.MARK_NONE:
-                            moves.append(movement)
-                    for capture in self.TIGER_CAPTURES[(row,col)]:
-                        if self._board[capture.toRow][capture.toCol] == Const.MARK_NONE:
-                            if self._board[capture.capRow][capture.capCol] == Const.MARK_GOAT:
-                                moves.append(capture)
+                    moves.extend(self.movements(row,col,1))
+                    moves.extend(self.movements(row,col,2))
         return moves
 
     def goatMoves(self) -> List[Move]:
@@ -167,11 +86,11 @@ class Game:
 
     @property
     def moves(self) -> List[Move]:
-        if self._state == Const.STATE_TURN_GOAT:
-            return self.goatMoves()
+        if self.over: return []
         if self._state == Const.STATE_TURN_TIGER:
             return self.tigerMoves()
-        return []
+        else:
+            return  self.goatMoves()
 
     def play(self,move : Move):
         if self.over:
@@ -190,7 +109,7 @@ class Game:
                 self._state = Const.STATE_WIN_TIGER
             self._captureTurns.append(self._turns)
         if self._state == Const.STATE_TURN_GOAT:
-            if not self.anyTigerMoves():
+            if len(self.tigerMoves())==0:
                 self._state = Const.STATE_WIN_GOAT
             else:
                 self._state = Const.STATE_TURN_TIGER
@@ -199,7 +118,8 @@ class Game:
         if self._turns - self._captureTurns[-1] > Const.MAX_MOVES_WITHOUT_CAPTURE:
             self._state = Const.STATE_DRAW
         if self._state == Const.STATE_TURN_GOAT:
-            if not self.anyGoatMoves():
+            goatMoves : List[Move] = self.goatMoves()
+            if len(goatMoves) == 0:
                 self._state = Const.STATE_DRAW
 
     def unplay(self, move : Move):

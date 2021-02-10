@@ -11,7 +11,7 @@ class ShyGoatAgent(Agent):
 
     def isCloseToTiger(self,row : int, col : int):
         game : Game = self.game
-        board : List[List[int]] = game._board
+        board : List[List[int]] = game.board
         for (dRow,dCol) in Const.DIRS[(row,col)]:
             if board[row+dRow][col+dCol] == Const.MARK_TIGER:
                 return True

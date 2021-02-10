@@ -18,7 +18,6 @@ def ConstDirCache(rows : int, cols : int) -> Dict[Tuple[int,int],List[Tuple[int,
     return cache
 
 
-    
 class Const:
     ROWS : int = 5
     COLS : int = 5
