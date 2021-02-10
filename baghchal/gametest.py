@@ -1,4 +1,4 @@
-import unittest
+import unittest,random
 from typing import List
 
 from const import Const
@@ -17,6 +17,15 @@ class GameTest(unittest.TestCase):
         game = Game()
         moves = game.goatMoves()
         self.assertEqual(len(moves),Const.ROWS*Const.COLS-4)
+
+    def test4Moves(self):
+        game = Game()
+        self.assertFalse(game.over)
+        for turns in range(8):
+            moves = game.moves
+            firstMove = moves[0]
+            game.play(firstMove)
+            self.assertFalse(game.over)
 
     def testCountPlacementMoves(self):
         game = Game()

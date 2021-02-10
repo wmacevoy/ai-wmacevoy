@@ -108,7 +108,8 @@ class Game:
         for row in range(Const.ROWS):
             for col in range(Const.COLS):
                 if self._board[row][col] == Const.MARK_NONE:
-                    moves.extend(self.GOAT_PLACEMENTS[(row,col)])
+                    placements = self.GOAT_PLACEMENTS[(row,col)]
+                    moves.extend(placements)
         return moves
 
     def goatMovements(self) -> List[Move]:

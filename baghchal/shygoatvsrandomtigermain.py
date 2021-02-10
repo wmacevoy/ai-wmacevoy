@@ -7,7 +7,7 @@ from shygoatagent import ShyGoatAgent
 from playoff import Playoff
 
 game = Game()
-playoff = Playoff(trials = 10, verbose = True)
+playoff = Playoff(trials = 10, verbose = False)
 
 
 playoff.addGoatAgent("shy goat",ShyGoatAgent(game))
