@@ -49,10 +49,16 @@ def _tigerCaptures() -> Dict[Tuple[int,int],List[Move]]:
             allMoves[(row,col)]=atMoves
     return allMoves
 
-
 class Game:
     def __init__(self):
         self.reset()
+
+
+    GOAT_PLACEMENTS : Dict[Tuple[int,int],List[Move]] = _goatPlacements()
+    GOAT_MOVEMENTS : Dict[Tuple[int,int],List[Move]] = _goatMovements()
+    TIGER_MOVEMENTS : Dict[Tuple[int,int],List[Move]] = _tigerMovements()
+    TIGER_CAPTURES : Dict[Tuple[int,int],List[Move]] = _tigerCaptures()
+
 
     def reset(self):
         self._board : List[List[int]] = [[Const.MARK_NONE for col in range(Const.COLS)] for row in range(Const.ROWS)]
@@ -64,13 +70,7 @@ class Game:
         self._turns : int = 0
         self._captureTurns : List[int] = [0]
         self._placed : int = 0 # number of goats placed
-        self._captured : int = 0 # number of goats captured
-    
-    
-    GOAT_PLACEMENTS : Dict[Tuple[int,int],List[Move]] = _goatPlacements()
-    GOAT_MOVEMENTS : Dict[Tuple[int,int],List[Move]] = _goatMovements()
-    TIGER_MOVEMENTS : Dict[Tuple[int,int],List[Move]] = _tigerMovements()
-    TIGER_CAPTURES : Dict[Tuple[int,int],List[Move]] = _tigerCaptures()
+        self._captured : int = 0 # number of goats captured    
 
     @property
     def over(self) -> bool:

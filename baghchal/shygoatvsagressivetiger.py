@@ -11,7 +11,7 @@ game = Game()
 playoff = Playoff(trials = 1000)
 
 
-playoff.addGoatAgent("shy goat",ShyGoatAgent(game))
-playoff.addTigerAgent("agressive tiger",AggressiveTigerAgent(game))
+playoff.addGoatAgent("shy goat",ShyGoatAgent(game,Const.MARK_GOAT))
+playoff.addTigerAgent("agressive tiger",AggressiveTigerAgent(game,Const.MARK_TIGER))
 
 playoff.play()
