@@ -47,7 +47,7 @@ def setup(args) -> Playoff:
         if matched:
             name=matched.group(1)
             clazz=load_class(name)
-            agent=clazz(game,Const.MARK_GOAT)
+            agent=clazz(game,Const.MARK_TIGER)
             tigers.append((name + " tiger",agent))
             continue
     
