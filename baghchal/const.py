@@ -18,6 +18,13 @@ def ConstDirCache(rows : int, cols : int) -> Dict[Tuple[int,int],List[Tuple[int,
     return cache
     
 class Const:
+    '''
+    Overall game constants.  DIRS is the most confusing,
+    it shows which way you can move at each (row,col) tuple.
+    Ex DIRS[(2,2)]=[(-1,-1),(-1,0),(-1,1),...]
+    Because in the center you can move in all directions.
+    Corners and NEWS cells are appropriatly restricted.
+    '''
     ROWS : int = 5
     COLS : int = 5
     GOAT_CAPTURES_FOR_TIGER_WIN : int = 5

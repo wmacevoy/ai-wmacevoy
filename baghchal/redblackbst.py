@@ -10,6 +10,9 @@ Key = TypeVar('Key')
 Value = TypeVar('Value')
 
 class RedBlackBSTNode(Generic[Key,Value]):
+    '''
+    Red-black balanced tree.  Used for caching in advanced agents.
+    '''
         def __init__(self, key : Key, value : Value, color : bool, size : int):
             self.key : Key = key
             self.value : Value = value

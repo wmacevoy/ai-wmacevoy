@@ -2,6 +2,18 @@ from typing import Tuple
 from const import Const
 
 class Move:
+    '''
+    Encapulates the idea of a single move for either side.
+    There 4 kinds: goat placements, goat movements,
+    tiger movements, and tiger captures.
+
+    move.goat vs move.tiger --- which side
+    move.placement vs move.movement vs move.capture
+     --- what kind
+    move.distance -- how far
+    move.capRow, move.capCol the (row,col) a capture skips
+      (where there should be a goat)
+    '''
     @classmethod
     def ok(cls, mark : int, fromRow : int, fromCol : int, toRow : int, toCol : int):
         if mark == Const.MARK_NONE:

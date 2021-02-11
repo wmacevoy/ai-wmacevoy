@@ -2,6 +2,11 @@ from game import Game
 from move import Move
 
 class Agent:
+    '''
+    Agents are the 'AI' part, they propose
+    a Move object as the best next move in the
+    game for their side.
+    '''
     def __init__(self, game : Game, side : int):
         self._game = game
         self._side = side
@@ -23,4 +28,10 @@ class Agent:
         self._side = value
 
     def propose(self) -> Move:
+        '''
+        propose must be defined in a subclass for the specific logic
+        of choosing a 'good' move.  See RandomAgent as an
+        example that chooses random one of the available
+        moves to the side in question.
+        '''
         raise ValueError("nope.")

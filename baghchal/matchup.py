@@ -7,6 +7,9 @@ from agent import Agent
 
 
 class Matchup:
+    '''
+    Pit two agents against each other in a game
+    '''
     def __init__(self, verbose : bool = True):
         self._game = Game()
         self._goatAgent : Agent = RandomAgent(self._game, Const.MARK_GOAT)

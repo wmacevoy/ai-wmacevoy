@@ -4,6 +4,9 @@ from matchup import Matchup
 from stats import Stats
 
 class Playoff:
+    '''
+    Run a series of matchups...
+    '''
     def __init__(self, trials : int = 10, verbose: bool = False):
         self._goatAgents : Dict[str,Agent] = dict()
         self._tigerAgents : Dict[str,Agent] = dict()
