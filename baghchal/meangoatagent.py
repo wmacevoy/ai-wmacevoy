@@ -7,7 +7,7 @@ import random
 
 class MeanGoatAgent(Agent):
     def __init__(self,game : Game, side : int):
-        super(ShyGoatAgent, self).__init__(game,side)
+        super(MeanGoatAgent, self).__init__(game,side)
         if side != Const.MARK_GOAT:
             raise ValueError("side must be goat")
 
