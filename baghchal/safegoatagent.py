@@ -16,11 +16,6 @@ class SafeGoatAgent(Agent):
         self.TIGER_VALUE = tigerval
         self.GOAT_VALUE = goatval
 
-    def findTokens(self, tokenType : int) -> List[(int, int)]:
-
-    def trappedTigers(self) -> int:
-        
-
     def isWin(self, move : Move) -> bool:
         game : Game = self.game
         game.play(move)
