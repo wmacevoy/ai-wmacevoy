@@ -18,13 +18,23 @@ class ShySideGoatAgent(Agent):
                 return True
         return False
 
+    #pulled from safegoatagent.py
+    def isWin(self, move : Move) -> bool:
+        game : Game = self.game
+        game.play(move)
+        rval : bool = game.state == Const.STATE_WIN_GOAT or game.state == Const.STATE_DRAW
+        game.unplay(move)
+        return rval
+
     def propose(self) -> Move:
         closeToTigerMoves : List[Move] = []
         notCloseToTigerMoves : List[Move] =  []
         notCloseToTigerSideMoves : List[Move] = []
         moves = self.game.goatMoves()
         for move in moves:
-            if Game.anyGoatMoves:
+            if self.isWin(move):
+                return move
+            if self.game.anyGoatMoves:
                 if not self.isCloseToTiger(move.toRow,move.toCol):
                     if ((move.toCol == 0) or (move.toCol == 4)) and ((move.toRow == 0) or (move.toRow == 4)):
                         notCloseToTigerSideMoves.append(move)
