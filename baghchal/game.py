@@ -177,6 +177,13 @@ class Game:
     def play(self,move : Move):
         if self.over:
             raise RuntimeError("move after game is over")
+        if move.goat:
+            if self._state != Const.STATE_TURN_GOAT:
+                raise ValueError("it is not goat's turn")
+        else:
+            if self._state != Const.STATE_TURN_TIGER:
+                raise ValueError("it is not tiger's turn")
+        self.moveOk(move)
         self._turns = self._turns + 1
         self._board[move.fromRow][move.fromCol]=Const.MARK_NONE
         self._board[move.toRow][move.toCol]=move.mark
