@@ -1,3 +1,4 @@
+from metaagent import MetaAgent
 import sys,re,importlib
 from typing import List
 from const import Const
@@ -22,6 +23,24 @@ def load_class(full_class_string):
     # Finally, we retrieve the Class
     return getattr(module, class_str)
 
+def metaagent(game : Game, side : int, parms : string) -> Agent:
+    args=parms.split(',')
+    metaAgent = MetaAgent(game,side)
+    for arg in args:
+        matched=re.match(r'maxDepth=(.*)',arg)
+        if matched:
+            metaAgent.maxDepth=int(matched.group(1))
+        matched=re.match(r'goat=(.*)',arg)
+        if matched:
+            name=matched.group(1)
+            clazz=load_class(name)
+            metaAgent.goat=clazz(game,Const.MARK_GOAT)
+        matched=re.match(r'tiger=(.*)',arg)
+        if matched:
+            name=matched.group(1)
+            clazz=load_class(name)
+            metaAgent.tiger=clazz(game,Const.MARK_TIGER)
+       
 def setup(args) -> Playoff:
     game=Game()
     verbose=False
@@ -43,12 +62,22 @@ def setup(args) -> Playoff:
             agent=clazz(game,Const.MARK_GOAT)
             goats.append((name + " goat",agent))
             continue
+        matched=re.match(r'--metagoat=(.*)',args[i])
+        if matched:
+            parms=matched.group(1)
+            agent=metaagent(game,Const.MARK_GOAT,parms)
+            continue
         matched=re.match(r'--tiger=(.*)',args[i])
         if matched:
             name=matched.group(1)
             clazz=load_class(name)
             agent=clazz(game,Const.MARK_TIGER)
             tigers.append((name + " tiger",agent))
+            continue
+        matched=re.match(r'--metatiger=(.*)',args[i])
+        if matched:
+            parms=matched.group(1)
+            agent=metaagent(game,Const.MARK_TIGER,parms)
             continue
     
     if len(goats) == 0:
