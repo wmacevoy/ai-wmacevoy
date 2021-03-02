@@ -80,13 +80,27 @@ class Game:
             self._state == Const.STATE_DRAW
 
     def moveOk(self,move : Move) -> None:
+        if move.goat:
+            if self._state != Const.STATE_TURN_GOAT:
+                raise ValueError("goat move and it is not goat's turn")
+            if move.placement:
+                if self._placed >= Const.GOAT_PLACEMENTS:
+                    raise ValueError("goat placement and all goats are placed")
+            else:
+                if self._placed < Const.GOAT_PLACEMENTS:
+                    raise ValueError("goat move and not all goats are placed")
+        elif move.tiger:
+            if self._state != Const.STATE_TURN_TIGER:
+                raise ValueError("tiger move and it is not tiger's turn")
+        else:
+            raise ValueError("move is not goat or tiger")
+
         if self._board[move.toRow][move.toCol] != Const.MARK_NONE:
             raise ValueError("destination (to) is occupied") 
         if not move.placement and self._board[move.fromRow][move.fromCol] != move.mark:
             raise ValueError("source (from) is not player")
-        if move.capture:
-            if self._board[move.capRow][move.capCol] != Const.MARK_GOAT:
-                raise ValueError("capture move without goat")
+        if move.capture and self._board[move.capRow][move.capCol] != Const.MARK_GOAT:
+            raise ValueError("capture move without goat")
 
     def movements(self, fromRow : int, fromCol : int, dist : int = 1) -> List[Move]:
         mark : int = self._board[fromRow][fromCol]
@@ -177,12 +191,6 @@ class Game:
     def play(self,move : Move):
         if self.over:
             raise RuntimeError("move after game is over")
-        if move.goat:
-            if self._state != Const.STATE_TURN_GOAT:
-                raise ValueError("it is not goat's turn")
-        else:
-            if self._state != Const.STATE_TURN_TIGER:
-                raise ValueError("it is not tiger's turn")
         self.moveOk(move)
         self._turns = self._turns + 1
         self._board[move.fromRow][move.fromCol]=Const.MARK_NONE
@@ -261,3 +269,15 @@ class Game:
         ans = Game()
         self.copyTo(ans)
         return ans
+
+    def __eq__(self, to : 'Game') -> bool:
+        if self._board != to._board: return False
+        if self._state != to._state: return False
+        if self._turns != to._turns: return False
+        if self._captured != to._captured: return False
+        if self._captureTurns != to._captureTurns: return False
+        if self._placed != to._placed: return False
+        return True
+
+    def __ne__(self,to : 'Game') -> bool:
+        return not self.__eq__(to)

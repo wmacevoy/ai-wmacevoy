@@ -23,7 +23,7 @@ def load_class(full_class_string):
     # Finally, we retrieve the Class
     return getattr(module, class_str)
 
-def metaagent(game : Game, side : int, parms : string) -> Agent:
+def metaagent(game : Game, side : int, parms : str) -> Agent:
     args=parms.split(',')
     metaAgent = MetaAgent(game,side)
     for arg in args:
@@ -44,12 +44,16 @@ def metaagent(game : Game, side : int, parms : string) -> Agent:
 def setup(args) -> Playoff:
     game=Game()
     verbose=False
+    fast=False
     trials=1
     goats : List[Agent] = []
     tigers : List[Agent] = []
     for i in range(len(args)):
         if args[i] == "--verbose":
             verbose = True
+            continue
+        if args[i] == "--fast":
+            fast = True
             continue
         matched=re.match(r'--trials=([0-9]+)',args[i])
         if matched:
@@ -84,7 +88,7 @@ def setup(args) -> Playoff:
         goats.append(('default random goat',RandomAgent(game,Const.MARK_GOAT)))
     if len(tigers) == 0:
         tigers.append(('default random tiger',RandomAgent(game,Const.MARK_TIGER)))
-    playoff=Playoff(trials,verbose)
+    playoff=Playoff(trials,verbose, fast)
     for (name,agent) in goats:
         playoff.addGoatAgent(name,agent)
     for (name,agent) in tigers:

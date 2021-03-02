@@ -39,6 +39,7 @@ class Move:
         elif dist < 1 or dist > 2:
             raise ValueError("tigers can only move 1 or 2 (capture)")
 
+
     def __init__(self, mark : int, fromRow : int, fromCol : int, toRow : int, toCol : int):
         self.ok(mark,fromRow,fromCol,toRow,toCol)
         self._mark : int = mark

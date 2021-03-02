@@ -7,11 +7,12 @@ class Playoff:
     '''
     Run a series of matchups...
     '''
-    def __init__(self, trials : int = 10, verbose: bool = False):
+    def __init__(self, trials : int = 10, verbose: bool = False, fast : bool = False):
         self._goatAgents : Dict[str,Agent] = dict()
         self._tigerAgents : Dict[str,Agent] = dict()
         self._trials : int = trials
         self._verbose = verbose
+        self._fast = fast
 
     def addGoatAgent(self,name : str,agent : Agent) -> None:
         self._goatAgents[name]=agent
@@ -24,7 +25,7 @@ class Playoff:
             for tigerAgentName in self._tigerAgents:
                 goatAgent : Agent = self._goatAgents[goatAgentName]
                 tigerAgent : Agent = self._tigerAgents[tigerAgentName]
-                matchup : Matchup = Matchup(self._verbose)
+                matchup : Matchup = Matchup(self._verbose, self._fast)
                 matchup.tigerAgent = tigerAgent
                 matchup.goatAgent = goatAgent
                 stats : Stats = Stats(matchup,self._trials)

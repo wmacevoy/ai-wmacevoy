@@ -12,12 +12,12 @@ class Stats:
 
     def playAll(self) -> None:
         for turn in range(self._trials):
-            self._matchup.game.reset()
+            self._matchup.reset()
             while not self._matchup.over:
                 self._matchup.turn()
-            if self._matchup.game.state == Const.STATE_WIN_GOAT:
+            if self._matchup.state == Const.STATE_WIN_GOAT:
                 self._goatWins += 1
-            elif self._matchup.game.state == Const.STATE_WIN_TIGER:
+            elif self._matchup.state == Const.STATE_WIN_TIGER:
                 self._tigerWins += 1
             else:
                 self._draws += 1
