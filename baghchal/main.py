@@ -40,6 +40,7 @@ def metaagent(game : Game, side : int, parms : str) -> Agent:
             name=matched.group(1)
             clazz=load_class(name)
             metaAgent.tiger=clazz(game,Const.MARK_TIGER)
+    return metaAgent
        
 def setup(args) -> Playoff:
     game=Game()
@@ -66,10 +67,12 @@ def setup(args) -> Playoff:
             agent=clazz(game,Const.MARK_GOAT)
             goats.append((name + " goat",agent))
             continue
-        matched=re.match(r'--metagoat=(.*)',args[i])
+        matched=re.match(r'--metagoat\[(.*)\]',args[i])
         if matched:
             parms=matched.group(1)
             agent=metaagent(game,Const.MARK_GOAT,parms)
+            goats.append((" metagoat[" + parms + "]",agent))
+
             continue
         matched=re.match(r'--tiger=(.*)',args[i])
         if matched:
@@ -78,10 +81,11 @@ def setup(args) -> Playoff:
             agent=clazz(game,Const.MARK_TIGER)
             tigers.append((name + " tiger",agent))
             continue
-        matched=re.match(r'--metatiger=(.*)',args[i])
+        matched=re.match(r'--metatiger\[(.*)\]',args[i])
         if matched:
             parms=matched.group(1)
             agent=metaagent(game,Const.MARK_TIGER,parms)
+            tigers.append((" metatiger[" + parms + "]",agent))
             continue
     
     if len(goats) == 0:

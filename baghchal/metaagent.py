@@ -104,9 +104,9 @@ class MetaAgent(Agent):
 
 
     def onside(self) -> bool:
-        if self.game.state == Const.STATE_TURN_GOAT and self.game.side == Const.MARK_GOAT:
+        if self.game.state == Const.STATE_TURN_GOAT and self._side == Const.MARK_GOAT:
             return True
-        if self.game.state == Const.STATE_TURN_TIGER and self.game.side == Const.MARK_TIGER:
+        if self.game.state == Const.STATE_TURN_TIGER and self._side == Const.MARK_TIGER:
             return True
         return False
 
@@ -116,7 +116,7 @@ class MetaAgent(Agent):
             bestMoves=[]
             for move in moves:
                 self.game.play(move)
-                moveValue = self.value(depth+1)
+                moveValue = self.value(0)
                 self.game.unplay(move)
                 if self.onside():
                     if bestValue == None or bestValue < moveValue:

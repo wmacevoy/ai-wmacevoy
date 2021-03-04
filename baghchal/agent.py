@@ -12,6 +12,10 @@ class Agent:
         self._side = side
 
     @property
+    def state(self) -> int:
+        return self._game.state
+
+    @property
     def game(self) -> Game:
         return self._game
 
